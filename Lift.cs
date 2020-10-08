@@ -16,7 +16,6 @@ namespace Lift
 
         public int PreviousFloor { get; set; }
 
-        public int Counter { get; set; } = 0;
         public bool IsFull()
         {
             return Passengers.Count == Capacity;
@@ -92,7 +91,6 @@ namespace Lift
         {
             PreviousFloor = CurrentFloor;
             CurrentFloor = currentFloor;
-            Counter++;
 
             DropPassengers(currentFloor);
 
