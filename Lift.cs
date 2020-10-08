@@ -69,16 +69,11 @@ namespace Lift
                 {                      
                     if ((PreviousFloor > CurrentFloor))
                     {
-                        return Floors.SelectMany(f => f.Passengers)
-                                               .Where(p => p.CurrentFloor != p.Destination)
-                                               .Select(p => p.CurrentFloor)
-                                               .Min();                                    
+                        return Floors.GetMinFloorWaitingPerson();                                   
                     } 
                     else if (CurrentFloor > PreviousFloor)
                     {
-                        return Floors.SelectMany(f => f.Passengers)
-                                               .Where(p => p.CurrentFloor != p.Destination)
-                                               .Select(p => p.CurrentFloor).Max();
+                        return Floors.GetMaxFloorWaitingPerson();
                         
                     }
                 }
