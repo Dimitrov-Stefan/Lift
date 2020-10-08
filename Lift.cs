@@ -26,7 +26,7 @@ namespace Lift
             return Passengers.Count == 0;
         }
 
-        public void LeaveFloor(List<Person> leavingPassangers)
+        public void LeaveLift(List<Person> leavingPassangers)
         {
             Passengers = Passengers.Except(leavingPassangers).ToList();
         }
@@ -125,7 +125,7 @@ namespace Lift
                 }
             }
 
-            LeaveFloor(droppedPassangers);
+            LeaveLift(droppedPassangers);
         }
 
         public void PickPassengers(int floorNumber)
