@@ -10,17 +10,17 @@ namespace Lift
             return !floors.Any(f => f.Passengers.Any(p => p.Destination != p.CurrentFloor));
         }
 
-        public static int GetMinFloorWaitingPerson(this List<Floor> floore)
+        public static int GetMinFloorWaitingPerson(this List<Floor> floors)
         {
-            return floore.SelectMany(f => f.Passengers)
+            return floors.SelectMany(f => f.Passengers)
                 .Where(p => p.CurrentFloor != p.Destination)
                 .Select(p => p.CurrentFloor)
                 .Min();
         }
 
-        public static int GetMaxFloorWaitingPerson(this List<Floor> floore)
+        public static int GetMaxFloorWaitingPerson(this List<Floor> floors)
         {
-            return floore.SelectMany(f => f.Passengers)
+            return floors.SelectMany(f => f.Passengers)
                 .Where(p => p.CurrentFloor != p.Destination)
                 .Select(p => p.CurrentFloor)
                 .Max();

@@ -6,37 +6,46 @@ namespace Lift
 {
     public class Lift
     {
-        public int MaxFloors { get; set; } = 11;
+        public Lift(LiftConfig liftConfig)
+        {
+            MaxFloors = liftConfig.MaxFloors;
+            Capacity = liftConfig.Capacity;
+            Floors = liftConfig.Floors;
+        }
 
-        public int Capacity { get; set; } = 5;
+        private int MaxFloors { get; set; }
 
-        public List<Person> Passengers { get; set; } = new List<Person>();
+        private List<Floor> Floors { get; set; }
 
-        public int CurrentFloor { get; set; }
+        private int Capacity { get; set; }
 
-        public int PreviousFloor { get; set; }
+        private List<Person> Passengers { get; set; } = new List<Person>();
 
-        public bool IsFull()
+        private int CurrentFloor { get; set; }
+
+        private int PreviousFloor { get; set; }
+
+        private bool IsFull()
         {
             return Passengers.Count == Capacity;
         }
 
-        public bool IsEmpty()
+        private bool IsEmpty()
         {
             return Passengers.Count == 0;
         }
 
-        public void LeaveLift(List<Person> leavingPassangers)
+        private void LeaveLift(List<Person> leavingPassengers)
         {
-            Passengers = Passengers.Except(leavingPassangers).ToList();
+            Passengers = Passengers.Except(leavingPassengers).ToList();
         }
 
-        public Floor GetFloor(int floorNumber)
+        private Floor GetFloor(int floorNumber)
         {
             return Floors[floorNumber];
         }
 
-        public int NextFloor()
+        private int NextFloor()
         {
             if (CurrentFloor == (MaxFloors - 1))
             {
@@ -97,8 +106,13 @@ namespace Lift
             Move(nextFloor);
         }
 
-        public void DropPassengers(int floorNumber)
+        private void DropPassengers(int floorNumber)
         {
+            if (IsEmpty())
+            {
+                return;
+            }
+
             var floor = GetFloor(floorNumber);
 
             var droppedPassangers = new List<Person>();
@@ -116,7 +130,7 @@ namespace Lift
             LeaveLift(droppedPassangers);
         }
 
-        public void PickPassengers(int floorNumber)
+        private void PickPassengers(int floorNumber)
         {
             var floor = GetFloor(floorNumber);
 
@@ -155,61 +169,6 @@ namespace Lift
             Console.WriteLine($"Current floor: {CurrentFloor}");
             Console.WriteLine("---------------------------------------------------------------------------------------------");
         }
-
-        List<Floor> Floors = new List<Floor>(){
-            new Floor(){
-                FloorNumber = 0,
-                Passengers = new List<Person>()
-            },
-            new Floor(){
-                FloorNumber = 1,
-                Passengers = new List<Person>() { new Person(1, 6), new Person(1, 5), new Person(1, 2) }
-            },
-            new Floor()
-            {
-                FloorNumber = 2,
-                Passengers = new List<Person>() { new Person(2, 4) }
-            },
-            new Floor()
-            {
-                FloorNumber = 3,
-                Passengers = new List<Person>()
-            },
-            new Floor()
-            {
-                FloorNumber = 4,
-                Passengers = new List<Person>() { new Person(4 ,0), new Person(4, 0), new Person(4, 0) }
-            },
-            new Floor()
-            {
-                FloorNumber = 5,
-                Passengers = new List<Person>()
-            },
-            new Floor()
-            {
-                FloorNumber = 6,
-                Passengers = new List<Person>()
-            },
-            new Floor()
-            {
-                FloorNumber = 7,
-                Passengers = new List<Person>() { new Person(7, 3), new Person(7, 6), new Person(7, 4), new Person(7, 5), new Person(7, 6) }
-            },
-            new Floor()
-            {
-                FloorNumber = 8,
-                Passengers = new List<Person>()
-            },
-            new Floor()
-            {
-                FloorNumber = 9,
-                Passengers = new List<Person>() { new Person(9, 1), new Person(9, 10), new Person(9, 2) }
-            },
-            new Floor()
-            {
-                FloorNumber = 10,
-                Passengers = new List<Person>() { new Person(10, 1), new Person(10, 4), new Person(10, 3), new Person(10, 2) }
-            }};
     }
 
 

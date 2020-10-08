@@ -8,9 +8,9 @@ namespace Lift
         public int FloorNumber { get; set; }
         public List<Person> Passengers { get; set; }
 
-        public void LeaveFloor(List<Person> leavingPassangers)
+        public void LeaveFloor(List<Person> leavingPassengers)
         {
-            Passengers = Passengers.Except(leavingPassangers).ToList();
+            Passengers = Passengers.Except(leavingPassengers).ToList();
         }
 
         public bool IsEmpty()
