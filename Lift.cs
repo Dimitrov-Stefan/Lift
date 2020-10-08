@@ -72,7 +72,7 @@ namespace Lift
         }
 
         /// <summary>
-        /// 
+        /// Moves the passengers from the lift to the floor.
         /// </summary>
         /// <param name="leavingPassengers">A list of passengers that get off the lift.</param>
         private void LeaveLift(List<Person> leavingPassengers)
