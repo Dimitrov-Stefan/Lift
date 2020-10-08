@@ -162,7 +162,7 @@ namespace Lift
                 i++;
             }
 
-            Console.WriteLine($"Elevator: {string.Join(", ", Passengers.Select(p => p.Destination).ToList()) }");
+            Console.WriteLine($"Lift: {string.Join(", ", Passengers.Select(p => p.Destination).ToList()) }");
             Console.WriteLine($"Previous floor: {PreviousFloor}");
             Console.WriteLine($"Current floor: {CurrentFloor}");
             Console.WriteLine("---------------------------------------------------------------------------------------------");
