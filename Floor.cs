@@ -7,6 +7,6 @@ namespace Lift
     public class Floor
     {
         public int FloorNumber { get; set; }
-        public Queue<Person> Passengers { get; set; }
+        public List<Person> Passengers { get; set; }
     }
 }

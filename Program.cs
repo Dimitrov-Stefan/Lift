@@ -6,6 +6,9 @@ namespace Lift
     {
         static void Main(string[] args)
         {
+            Lift lift = new Lift();
+            lift.Move(0);
+
             Console.WriteLine("Hello World!");
         }
     }
