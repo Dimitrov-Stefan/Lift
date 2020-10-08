@@ -117,13 +117,13 @@ namespace Lift
 
             var droppedPassangers = new List<Person>();
 
-            foreach (var passanger in Passengers)
+            foreach (var passenger in Passengers)
             {
-                if (passanger.Destination == floorNumber)
+                if (passenger.Destination == floorNumber)
                 {
-                    passanger.CurrentFloor = floorNumber;
-                    floor.Passengers.Add(passanger);
-                    droppedPassangers.Add(passanger);
+                    passenger.CurrentFloor = floorNumber;
+                    floor.Passengers.Add(passenger);
+                    droppedPassangers.Add(passenger);
                 }
             }
 
@@ -141,12 +141,12 @@ namespace Lift
 
             var pickedUpPassangers = new List<Person>();
 
-            foreach (var passanger in floor.Passengers)
+            foreach (var passenger in floor.Passengers)
             {
-                if (passanger.Destination != floorNumber && !IsFull())
+                if (passenger.Destination != floorNumber && !IsFull())
                 {
-                    Passengers.Add(passanger);
-                    pickedUpPassangers.Add(passanger);
+                    Passengers.Add(passenger);
+                    pickedUpPassangers.Add(passenger);
                 }
             }
 
