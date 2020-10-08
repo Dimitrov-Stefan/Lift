@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Lift
 {
@@ -13,111 +12,162 @@ namespace Lift
 
         public List<Person> Passengers { get; set; } = new List<Person>();
 
-        public bool IsGoingUp { get; set; } = true;
-
         public int CurrentFloor { get; set; }
 
-        public void CheckDirectionChange()
+        public int PreviousFloor { get; set; }
+
+        public int Counter { get; set; } = 0;
+        public bool IsFull()
         {
-            // (Moving UP && No passengers going UP && Has passengers going DOWN) || Current floor = max floor
-            if ((IsGoingUp && !Passengers.Any(p => p.IsGoingUp) && Passengers.Any(p => !p.IsGoingUp)) || CurrentFloor == MaxFloors)
-            {
-                IsGoingUp = false;
-            }
-            // (Moving DOWN && Has passangers going UP && No passangers going DOWN) || Current floor = 0
-            else if ((!IsGoingUp && Passengers.Any(p => p.IsGoingUp) && !Passengers.Any(p => !p.IsGoingUp)) || CurrentFloor == 0)
-            {
-                IsGoingUp = true;
-            }
+            return Passengers.Count == Capacity;
         }
 
-        public void Move(int currentFloor, int counter = 0)
+        public bool IsEmpty()
         {
-            Console.WriteLine($"Moving to floor {currentFloor}.");
+            return Passengers.Count == 0;
+        }
 
-            DropPassengers(currentFloor);
-            PickPassengers(currentFloor);
+        public void LeaveFloor(List<Person> leavingPassangers)
+        {
+            Passengers = Passengers.Except(leavingPassangers).ToList();
+        }
 
-            CurrentFloor = currentFloor;
-            Passengers.ForEach(p => p.CurrentFloor = currentFloor);
+        public Floor GetFloor(int floorNumber)
+        {
+            return Floors[floorNumber];
+        }
 
-            CheckDirectionChange();
+        public int NextFloor()
+        {
+            if (CurrentFloor == (MaxFloors - 1))
+            {             
+                return CurrentFloor - 1;
+            }
 
-            if (IsGoingUp)
+            if (CurrentFloor == 0)
+            {              
+                return CurrentFloor + 1;
+            }
+
+            if (!IsEmpty())
             {
-                CurrentFloor++;
+                if (Passengers.Select(i => i.Destination).Max() > CurrentFloor)
+                {
+                    return CurrentFloor + 1;
+                }
+                else if (Passengers.Select(i => i.Destination).Min() < CurrentFloor)
+                {
+                    return CurrentFloor - 1;
+                }
             }
             else
             {
-                CurrentFloor--;
+                if (Floors.AreAllDelivered())
+                {
+                    return 0;
+                }
+                else
+                {                      
+                    if ((PreviousFloor > CurrentFloor))
+                    {
+                        return Floors.SelectMany(p => p.Passengers)
+                                               .Where(p => p.CurrentFloor != p.Destination)
+                                               .Select(i => i.CurrentFloor)
+                                               .Min();                                    
+                    } 
+                    else if (CurrentFloor > PreviousFloor)
+                    {
+                        return Floors.SelectMany(p => p.Passengers)
+                                               .Where(p => p.CurrentFloor != p.Destination)
+                                               .Select(i => i.CurrentFloor).Max();
+                        
+                    }
+                }
             }
 
-            counter++;
+            return 0;
+        }
 
-            if (!Floors.Any(f => f.Passengers.Any(p => p.Destination != p.CurrentFloor)) || counter == 100)
+        public void Move(int currentFloor)
+        {
+            PreviousFloor = CurrentFloor;
+            CurrentFloor = currentFloor;
+            Counter++;
+
+            DropPassengers(currentFloor);
+
+            if (IsEmpty() && Floors.AreAllDelivered())
             {
+                PrintStatus();
                 return;
             }
 
-            Move(CurrentFloor, counter);
-        }
+            PickPassengers(currentFloor);
 
-        public void ChangeDirection()
-        {
-            if (Passengers.Any(p => p.IsGoingUp))
-            {
+            var nextFloor = NextFloor();
 
-            }
+            PrintStatus();
+
+            Move(nextFloor);
         }
 
         public void DropPassengers(int floorNumber)
         {
-            var floor = Floors.SingleOrDefault(f => f.FloorNumber == floorNumber);
-
-            if (floor == null || floor.Passengers.Count == 0 || Passengers.Count == Capacity)
-            {
-                return;
-            }
+            var floor = GetFloor(floorNumber);
 
             var droppedPassangers = new List<Person>();
 
-            foreach (var pass in Passengers)
+            foreach (var passanger in Passengers)
             {
-                if (pass.Destination == floorNumber)
+                if (passanger.Destination == floorNumber)
                 {
-                    pass.CurrentFloor = CurrentFloor;
-                    Console.WriteLine($"Dropping passenger.");
-                    droppedPassangers.Add(pass);
-                    floor.Passengers.Add(pass);
+                    passanger.CurrentFloor = floorNumber;
+                    floor.Passengers.Add(passanger);
+                    droppedPassangers.Add(passanger);                  
                 }
             }
 
-            Passengers = Passengers.Except(droppedPassangers).ToList();
+            LeaveFloor(droppedPassangers);
         }
 
         public void PickPassengers(int floorNumber)
         {
-            var floor = Floors.SingleOrDefault(f => f.FloorNumber == floorNumber);
-
-            if (floor == null || floor.Passengers.Count == 0)
+            var floor = GetFloor(floorNumber);
+            
+            if (floor.IsEmpty())
             {
                 return;
             }
 
             var pickedUpPassangers = new List<Person>();
 
-            for (int i = 0; i < floor.Passengers.Count; i++)
+            foreach(var passanger in floor.Passengers)
             {
-                var pass = floor.Passengers[i];
-                if (pass.Destination != floorNumber && Passengers.Count < Capacity)
+                if (passanger.Destination != floorNumber && !IsFull())
                 {
-                    Passengers.Add(pass);
-                    pickedUpPassangers.Add(pass);
-                    Console.WriteLine($"Picking passanger from floor {CurrentFloor}");
+                    Passengers.Add(passanger);
+                    pickedUpPassangers.Add(passanger);
                 }
             }
 
-            floor.Passengers = floor.Passengers.Except(pickedUpPassangers).ToList();
+            floor.LeaveFloor(pickedUpPassangers);
+        }
+
+        private void PrintStatus()
+        {
+            int i = 0;
+            foreach (var floor in Floors)
+            {
+                Console.WriteLine($"Floor {i}: {string.Join(", ", floor.Passengers.Select(p => p.Destination).ToList()) }");
+                Console.WriteLine(" ");
+
+                i++;
+            }
+
+            Console.WriteLine($"Elevator: {string.Join(", ", Passengers.Select(p => p.Destination).ToList()) }");
+            Console.WriteLine($"Previous floor: {PreviousFloor}");
+            Console.WriteLine($"Current floor: {CurrentFloor}");
+            Console.WriteLine("---------------------------------------------------------------------------------------------");
         }
 
         List<Floor> Floors = new List<Floor>(){
@@ -127,32 +177,52 @@ namespace Lift
             },
             new Floor(){
                 FloorNumber = 1,
-                Passengers = new List<Person>() { new Person(6), new Person(5), new Person(2) }
+                Passengers = new List<Person>() { new Person(1, 6), new Person(1, 5), new Person(1, 2) }
             },
             new Floor()
             {
                 FloorNumber = 2,
-                Passengers = new List<Person>() { new Person(4) }
+                Passengers = new List<Person>() { new Person(2, 4) }
+            },
+            new Floor()
+            {
+                FloorNumber = 3,
+                Passengers = new List<Person>()
             },
             new Floor()
             {
                 FloorNumber = 4,
-                Passengers = new List<Person>() { new Person(0), new Person(0), new Person(0) }
+                Passengers = new List<Person>() { new Person(4 ,0), new Person(4, 0), new Person(4, 0) }
+            },
+            new Floor()
+            {
+                FloorNumber = 5,
+                Passengers = new List<Person>()
+            },
+            new Floor()
+            {
+                FloorNumber = 6,
+                Passengers = new List<Person>()
             },
             new Floor()
             {
                 FloorNumber = 7,
-                Passengers = new List<Person>() { new Person(3), new Person(6), new Person(4), new Person(5), new Person(6) }
+                Passengers = new List<Person>() { new Person(7, 3), new Person(7, 6), new Person(7, 4), new Person(7, 5), new Person(7, 6) }
+            },
+            new Floor()
+            {
+                FloorNumber = 8,
+                Passengers = new List<Person>()
             },
             new Floor()
             {
                 FloorNumber = 9,
-                Passengers = new List<Person>() { new Person(1), new Person(10), new Person(2) }
+                Passengers = new List<Person>() { new Person(9, 1), new Person(9, 10), new Person(9, 2) }
             },
             new Floor()
             {
                 FloorNumber = 10,
-                Passengers = new List<Person>() { new Person(1), new Person(4), new Person(3), new Person(2) }
+                Passengers = new List<Person>() { new Person(10, 1), new Person(10, 4), new Person(10, 3), new Person(10, 2) }
             }};
     }
 

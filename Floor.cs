@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Lift
 {
@@ -8,5 +7,15 @@ namespace Lift
     {
         public int FloorNumber { get; set; }
         public List<Person> Passengers { get; set; }
+
+        public void LeaveFloor(List<Person> leavingPassangers)
+        {
+            Passengers = Passengers.Except(leavingPassangers).ToList();
+        }
+
+        public bool IsEmpty()
+        {
+            return Passengers.Count == 0;
+        }
     }
 }

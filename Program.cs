@@ -8,8 +8,6 @@ namespace Lift
         {
             Lift lift = new Lift();
             lift.Move(0);
-
-            Console.WriteLine("Hello World!");
         }
     }
 }
