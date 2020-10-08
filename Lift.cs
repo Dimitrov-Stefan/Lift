@@ -39,12 +39,12 @@ namespace Lift
         public int NextFloor()
         {
             if (CurrentFloor == (MaxFloors - 1))
-            {             
+            {
                 return CurrentFloor - 1;
             }
 
             if (CurrentFloor == 0)
-            {              
+            {
                 return CurrentFloor + 1;
             }
 
@@ -61,22 +61,15 @@ namespace Lift
             }
             else
             {
-                if (Floors.AreAllDelivered())
+                if (PreviousFloor > CurrentFloor)
                 {
-                    return 0;
+                    return Floors.GetMinFloorWaitingPerson();
                 }
-                else
-                {                      
-                    if ((PreviousFloor > CurrentFloor))
-                    {
-                        return Floors.GetMinFloorWaitingPerson();                                   
-                    } 
-                    else if (CurrentFloor > PreviousFloor)
-                    {
-                        return Floors.GetMaxFloorWaitingPerson();
-                        
-                    }
+                else if (CurrentFloor > PreviousFloor)
+                {
+                    return Floors.GetMaxFloorWaitingPerson();
                 }
+
             }
 
             return 0;
@@ -116,7 +109,7 @@ namespace Lift
                 {
                     passanger.CurrentFloor = floorNumber;
                     floor.Passengers.Add(passanger);
-                    droppedPassangers.Add(passanger);                  
+                    droppedPassangers.Add(passanger);
                 }
             }
 
@@ -126,7 +119,7 @@ namespace Lift
         public void PickPassengers(int floorNumber)
         {
             var floor = GetFloor(floorNumber);
-            
+
             if (floor.IsEmpty())
             {
                 return;
@@ -134,7 +127,7 @@ namespace Lift
 
             var pickedUpPassangers = new List<Person>();
 
-            foreach(var passanger in floor.Passengers)
+            foreach (var passanger in floor.Passengers)
             {
                 if (passanger.Destination != floorNumber && !IsFull())
                 {
