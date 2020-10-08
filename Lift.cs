@@ -6,6 +6,12 @@ namespace Lift
 {
     public class Lift
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the Lift class.
+        /// </summary>
+        /// <param name="liftConfig"></param>
         public Lift(LiftConfig liftConfig)
         {
             MaxFloors = liftConfig.MaxFloors;
@@ -13,38 +19,80 @@ namespace Lift
             Floors = liftConfig.Floors;
         }
 
+        #endregion Constructors
+
+        #region Private Members
+
+        /// <summary>
+        /// The number of floors the lift can travel to.
+        /// </summary>
         private int MaxFloors { get; set; }
 
+        /// <summary>
+        /// A list pf all the floors that have passengers.
+        /// </summary>
         private List<Floor> Floors { get; set; }
 
+        /// <summary>
+        /// The number of people that can be in the lift at once.
+        /// </summary>
         private int Capacity { get; set; }
 
+        /// <summary>
+        /// A list of passangers on the lift.
+        /// </summary>
         private List<Person> Passengers { get; set; } = new List<Person>();
 
+        /// <summary>
+        /// The current floor the lift is on.
+        /// </summary>
         private int CurrentFloor { get; set; }
 
+        /// <summary>
+        /// The previous floor the lift was on.
+        /// </summary>
         private int PreviousFloor { get; set; }
 
+        /// <summary>
+        /// A property indicating whether the lift is full.
+        /// </summary>
+        /// <returns>True if full, false otherwise.</returns>
         private bool IsFull()
         {
             return Passengers.Count == Capacity;
         }
 
+        /// <summary>
+        /// A property indicating whether the lift is empty.
+        /// </summary>
+        /// <returns>True if empty, false otherwise.</returns>
         private bool IsEmpty()
         {
             return Passengers.Count == 0;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leavingPassengers">A list of passengers that get off the lift.</param>
         private void LeaveLift(List<Person> leavingPassengers)
         {
             Passengers = Passengers.Except(leavingPassengers).ToList();
         }
 
+        /// <summary>
+        /// Gets a floor by floor number.
+        /// </summary>
+        /// <param name="floorNumber"></param>
+        /// <returns>Floor</returns>
         private Floor GetFloor(int floorNumber)
         {
             return Floors[floorNumber];
         }
 
+        /// <summary>
+        /// The next floor the lift will move to.
+        /// </summary>
         private int NextFloor()
         {
             if (CurrentFloor == (MaxFloors - 1))
@@ -84,28 +132,10 @@ namespace Lift
             return 0;
         }
 
-        public void Move(int currentFloor)
-        {
-            PreviousFloor = CurrentFloor;
-            CurrentFloor = currentFloor;
-
-            DropPassengers(currentFloor);
-
-            if (IsEmpty() && Floors.AreAllDelivered())
-            {
-                PrintStatus();
-                return;
-            }
-
-            PickPassengers(currentFloor);
-
-            var nextFloor = NextFloor();
-
-            PrintStatus();
-
-            Move(nextFloor);
-        }
-
+        /// <summary>
+        /// Drops passangers that want to get off at the given floor.
+        /// </summary>
+        /// <param name="floorNumber">The number of the floor.</param>
         private void DropPassengers(int floorNumber)
         {
             if (IsEmpty())
@@ -130,6 +160,10 @@ namespace Lift
             LeaveLift(droppedPassangers);
         }
 
+        /// <summary>
+        /// Picks passengers from the given floor.
+        /// </summary>
+        /// <param name="floorNumber">The number of the floor.</param>
         private void PickPassengers(int floorNumber)
         {
             var floor = GetFloor(floorNumber);
@@ -153,6 +187,9 @@ namespace Lift
             floor.LeaveFloor(pickedUpPassangers);
         }
 
+        /// <summary>
+        /// Prints status data on the screen.
+        /// </summary>
         private void PrintStatus()
         {
             int i = 0;
@@ -169,6 +206,39 @@ namespace Lift
             Console.WriteLine($"Current floor: {CurrentFloor}");
             Console.WriteLine("---------------------------------------------------------------------------------------------");
         }
+
+        #endregion Private Members
+
+        #region Public Members
+
+
+        /// <summary>
+        /// Moves the lift up and down.
+        /// </summary>
+        /// <param name="currentFloor">The current floor of the lift.</param>
+        public void Move(int currentFloor)
+        {
+            PreviousFloor = CurrentFloor;
+            CurrentFloor = currentFloor;
+
+            DropPassengers(currentFloor);
+
+            if (IsEmpty() && Floors.AreAllDelivered())
+            {
+                PrintStatus();
+                return;
+            }
+
+            PickPassengers(currentFloor);
+
+            var nextFloor = NextFloor();
+
+            PrintStatus();
+
+            Move(nextFloor);
+        }
+
+        #endregion Public Members
     }
 
 
