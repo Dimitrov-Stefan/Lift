@@ -45,7 +45,7 @@ namespace Lift
         }
 
         /// <summary>
-        /// Tries to add a floor history record
+        /// Tries to add a floor history record.
         /// </summary>
         /// <param name="floors">The floor list.</param>
         /// <param name="floorNumber">The number of the floor to add.</param>

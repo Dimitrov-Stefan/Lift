@@ -233,18 +233,27 @@ namespace Lift
         {
             PreviousFloor = CurrentFloor;
             CurrentFloor = currentFloor;
+            int nextFloor;
 
             DropPassengers(currentFloor);
 
             if (IsEmpty() && Floors.AreAllDelivered())
             {
+                if (currentFloor > 0)
+                {
+                    currentFloor--;
+                    nextFloor = currentFloor;
+                    Move(nextFloor);
+                }
+
+                FloorHistory.TryAddHistoryRecord(0);
                 PrintStatus();
                 return;
             }
 
             PickPassengers(currentFloor);
 
-            var nextFloor = NextFloor();
+            nextFloor = NextFloor();
 
             PrintStatus();
 
