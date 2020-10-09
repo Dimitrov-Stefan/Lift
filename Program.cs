@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lift
 {
@@ -15,6 +16,9 @@ namespace Lift
 
             Lift lift = new Lift(liftConfig);
             lift.Move(0);
+
+            var floorHistory = string.Join("-", lift.GetFloorHistory());
+            Console.WriteLine($"The visited floors in order: {floorHistory}");
         }
 
         private static List<Floor> GetFloors()

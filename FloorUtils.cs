@@ -43,5 +43,20 @@ namespace Lift
                 .Select(p => p.CurrentFloor)
                 .Max();
         }
+
+        /// <summary>
+        /// Tries to add a floor history record
+        /// </summary>
+        /// <param name="floors">The floor list.</param>
+        /// <param name="floorNumber">The number of the floor to add.</param>
+        public static void TryAddHistoryRecord(this List<int> floors, int floorNumber)
+        {
+            var lastItem = floors.LastOrDefault();
+
+            if (lastItem != floorNumber)
+            {
+                floors.Add(floorNumber);
+            }
+        }
     }
 }

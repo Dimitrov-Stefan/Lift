@@ -34,6 +34,11 @@ namespace Lift
         private List<Floor> Floors { get; set; }
 
         /// <summary>
+        /// A list of all visited floors.
+        /// </summary>
+        private List<int> FloorHistory { get; set; } = new List<int>();
+
+        /// <summary>
         /// The number of people that can be in the lift at once.
         /// </summary>
         private int Capacity { get; set; }
@@ -157,7 +162,11 @@ namespace Lift
                 }
             }
 
-            LeaveLift(droppedPassangers);
+            if (droppedPassangers.Any())
+            {
+                LeaveLift(droppedPassangers);
+                FloorHistory.TryAddHistoryRecord(floorNumber);
+            }
         }
 
         /// <summary>
@@ -184,7 +193,11 @@ namespace Lift
                 }
             }
 
-            floor.LeaveFloor(pickedUpPassangers);
+            if (pickedUpPassangers.Any())
+            {
+                floor.LeaveFloor(pickedUpPassangers);
+                FloorHistory.TryAddHistoryRecord(floorNumber);
+            }
         }
 
         /// <summary>
@@ -238,8 +251,12 @@ namespace Lift
             Move(nextFloor);
         }
 
+        /// <summary>
+        /// Gets a list of all visited floors. 
+        /// </summary>
+        /// <returns>A list of all visited floors.</returns>
+        public List<int> GetFloorHistory() => FloorHistory;
+
         #endregion Public Members
     }
-
-
 }
