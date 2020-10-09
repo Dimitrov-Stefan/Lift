@@ -12,7 +12,7 @@ namespace Lift
         /// <summary>
         /// The number of floors the lift can travel to.
         /// </summary>
-        public int MaxFloors { get; set; } = 11;
+        public int MaxFloors { get; set; }
 
         /// <summary>
         /// A list pf all the floors that have passengers.
@@ -22,6 +22,6 @@ namespace Lift
         /// <summary>
         /// The number of people that can be in the lift at once.
         /// </summary>
-        public int Capacity { get; set; } = 5;
+        public int Capacity { get; set; }
     }
 }

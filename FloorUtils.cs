@@ -45,11 +45,11 @@ namespace Lift
         }
 
         /// <summary>
-        /// Tries to add a floor history record.
+        /// Adds a floor to a list without duplication.
         /// </summary>
         /// <param name="floors">The floor list.</param>
         /// <param name="floorNumber">The number of the floor to add.</param>
-        public static void TryAddHistoryRecord(this List<int> floors, int floorNumber)
+        public static void AddFloorWithoutDuplication(this List<int> floors, int floorNumber)
         {
             var lastItem = floors.LastOrDefault();
 

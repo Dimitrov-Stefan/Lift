@@ -165,7 +165,7 @@ namespace Lift
             if (droppedPassangers.Any())
             {
                 LeaveLift(droppedPassangers);
-                FloorHistory.TryAddHistoryRecord(floorNumber);
+                AddHistoryRecord(floorNumber);
             }
         }
 
@@ -196,7 +196,7 @@ namespace Lift
             if (pickedUpPassangers.Any())
             {
                 floor.LeaveFloor(pickedUpPassangers);
-                FloorHistory.TryAddHistoryRecord(floorNumber);
+                AddHistoryRecord(floorNumber);
             }
         }
 
@@ -218,6 +218,15 @@ namespace Lift
             Console.WriteLine($"Previous floor: {PreviousFloor}");
             Console.WriteLine($"Current floor: {CurrentFloor}");
             Console.WriteLine("---------------------------------------------------------------------------------------------");
+        }
+
+        /// <summary>
+        /// Adds a floor history record.
+        /// </summary>
+        /// <param name="floorNumber">The number of the floor to add as history record.</param>
+        private void AddHistoryRecord(int floorNumber)
+        {
+            FloorHistory.AddFloorWithoutDuplication(floorNumber);
         }
 
         #endregion Private Members
@@ -246,7 +255,7 @@ namespace Lift
                     Move(nextFloor);
                 }
 
-                FloorHistory.TryAddHistoryRecord(0);
+                AddHistoryRecord(0);
                 PrintStatus();
                 return;
             }
