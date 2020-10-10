@@ -1,6 +1,7 @@
 using Lift;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LiftTests
 {
@@ -54,6 +55,27 @@ namespace LiftTests
 
             // Assert
             Assert.IsTrue(floorHistory != "1-2-4-5-6-0-10-9-4-3-2-1-7-6-5-4-3-9-10-2");
+        }
+
+        /// <summary>
+        /// Checks whether there are passengers that didn't reach their destination. Should be false.
+        /// </summary>
+        [TestMethod]
+        public void Passengers_NotArrivedAtDestination_False()
+        {
+            // Arrange
+            var floorList = GetFloors();
+            LiftConfig liftConfig = new LiftConfig();
+            liftConfig.MaxFloors = 11;
+            liftConfig.Floors = GetFloors();
+            liftConfig.Capacity = 5;
+            Lift.Lift lift = new Lift.Lift(liftConfig);
+
+            // Act
+            lift.Move(0);
+
+            // Assert
+            Assert.IsFalse(lift.GetFloors().Any(f=> f.Passengers.Any(p => p.CurrentFloor != p.Destination)));
         }
 
         /// <summary>

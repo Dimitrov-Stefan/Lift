@@ -275,6 +275,12 @@ namespace Lift
         /// <returns>A list of all visited floors.</returns>
         public List<int> GetFloorHistory() => FloorHistory;
 
+        /// <summary>
+        /// Gets a list of all floors and their data.
+        /// </summary>
+        /// <returns>A list of all floors and their data</returns>
+        public List<Floor> GetFloors() => Floors;
+
         #endregion Public Members
     }
 }
