@@ -21,6 +21,10 @@ namespace Lift
             Console.WriteLine($"The visited floors in order: {floorHistory}");
         }
 
+        /// <summary>
+        /// Gets a list of floors as an input to the program.
+        /// </summary>
+        /// <returns>A list of floors.</returns>
         private static List<Floor> GetFloors()
         {
             return  new List<Floor>(){
