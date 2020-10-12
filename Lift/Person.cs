@@ -22,7 +22,7 @@
         public int CurrentFloor { get; set; }
 
         /// <summary>
-        /// The destination floor
+        /// The destination floor.
         /// </summary>
         public int Destination { get; set; }
     }

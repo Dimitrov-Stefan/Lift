@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Lift
 {
+    /// <summary>
+    /// The lift class containing lift logic.
+    /// </summary>
     public class Lift
     {
         #region Constructors
@@ -11,7 +14,7 @@ namespace Lift
         /// <summary>
         /// Initializes a new instance of the Lift class.
         /// </summary>
-        /// <param name="liftConfig"></param>
+        /// <param name="liftConfig">The lift configuration.</param>
         public Lift(LiftConfig liftConfig)
         {
             MaxFloors = liftConfig.MaxFloors;
@@ -59,7 +62,7 @@ namespace Lift
         private int PreviousFloor { get; set; }
 
         /// <summary>
-        /// A property indicating whether the lift is full.
+        /// Indicates whether the lift is full.
         /// </summary>
         /// <returns>True if full, false otherwise.</returns>
         private bool IsFull()
@@ -68,7 +71,7 @@ namespace Lift
         }
 
         /// <summary>
-        /// A property indicating whether the lift is empty.
+        /// Indicates whether the lift is empty.
         /// </summary>
         /// <returns>True if empty, false otherwise.</returns>
         private bool IsEmpty()
@@ -79,7 +82,7 @@ namespace Lift
         /// <summary>
         /// Moves the passengers from the lift to the floor.
         /// </summary>
-        /// <param name="leavingPassengers">A list of passengers that get off the lift.</param>
+        /// <param name="leavingPassengers">A list of passengers that get off of the lift.</param>
         private void LeaveLift(List<Person> leavingPassengers)
         {
             Passengers = Passengers.Except(leavingPassengers).ToList();
@@ -96,7 +99,7 @@ namespace Lift
         }
 
         /// <summary>
-        /// The next floor the lift will move to.
+        /// Gets the next floor the lift will move to.
         /// </summary>
         private int NextFloor()
         {
@@ -223,7 +226,7 @@ namespace Lift
         /// <summary>
         /// Adds a floor history record.
         /// </summary>
-        /// <param name="floorNumber">The number of the floor to add as history record.</param>
+        /// <param name="floorNumber">The number of the floor to add as a history record.</param>
         private void AddHistoryRecord(int floorNumber)
         {
             FloorHistory.AddFloorWithoutDuplication(floorNumber);
