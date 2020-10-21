@@ -115,13 +115,34 @@ namespace Lift
 
             if (!IsEmpty())
             {
-                if (Passengers.Select(i => i.Destination).Max() > CurrentFloor)
+                int? floorToMoveTo = null;
+
+                var mechanics = Passengers.Where(p => p.IsMechanic).ToList();
+                var regularPassengers = Passengers.Where(p => !p.IsMechanic).ToList();
+
+                if (mechanics.Any())
                 {
-                    return CurrentFloor + 1;
+                    floorToMoveTo = CalculateNextFloorLiftNotEmpty(mechanics);
                 }
-                else if (Passengers.Select(i => i.Destination).Min() < CurrentFloor)
+                else
                 {
-                    return CurrentFloor - 1;
+                    floorToMoveTo = CalculateNextFloorLiftNotEmpty(regularPassengers);
+                }
+
+                if (floorToMoveTo != null)
+                {
+                    return floorToMoveTo.Value;
+                }
+            }
+            else if (HasFloorsWithWaitingMechanics())
+            {
+                if (PreviousFloor > CurrentFloor)
+                {
+                    return Floors.GetMinFloorWaitingMechanic();
+                }
+                else if (CurrentFloor > PreviousFloor)
+                {
+                    return Floors.GetMaxFloorWaitingMechanic();
                 }
             }
             else
@@ -134,10 +155,30 @@ namespace Lift
                 {
                     return Floors.GetMaxFloorWaitingPerson();
                 }
-
             }
 
             return 0;
+        }
+
+        /// <summary>
+        /// Calculates the next floor based on the passengers that are in it.
+        /// </summary>
+        /// <param name="passengers"></param>
+        /// <returns></returns>
+        private int? CalculateNextFloorLiftNotEmpty(List<Person> passengers)
+        {
+            if (passengers.Select(p => p.Destination).Max() > CurrentFloor)
+            {
+                return CurrentFloor + 1;
+            }
+            else if (passengers.Select(p => p.Destination).Min() < CurrentFloor)
+            {
+                return CurrentFloor - 1;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -179,15 +220,18 @@ namespace Lift
         private void PickPassengers(int floorNumber)
         {
             var floor = GetFloor(floorNumber);
+            bool hasFloorsWithWaitingMechanics = HasFloorsWithWaitingMechanics();
 
-            if (floor.IsEmpty())
+            if (floor.IsEmpty() || (hasFloorsWithWaitingMechanics && !floor.HasWaitingMechanics()))
             {
                 return;
             }
 
             var pickedUpPassangers = new List<Person>();
 
-            foreach (var passenger in floor.Passengers)
+            var passengersToPick = floor.Passengers.Where(p => p.CurrentFloor != p.Destination).OrderBy(p => p.IsMechanic).ToList();
+
+            foreach (var passenger in passengersToPick)
             {
                 if (passenger.Destination != floorNumber && !IsFull())
                 {
@@ -202,6 +246,9 @@ namespace Lift
                 AddHistoryRecord(floorNumber);
             }
         }
+
+        private bool HasFloorsWithWaitingMechanics() =>  Floors.Where(f => f.Passengers.Any(p => p.IsMechanic && (p.CurrentFloor != p.Destination))).Any();
+        
 
         /// <summary>
         /// Prints status data on the screen.

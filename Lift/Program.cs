@@ -27,14 +27,14 @@ namespace Lift
         /// <returns>A list of floors.</returns>
         private static List<Floor> GetFloors()
         {
-            return  new List<Floor>(){
+            return new List<Floor>(){
             new Floor(){
                 FloorNumber = 0,
                 Passengers = new List<Person>()
             },
             new Floor(){
                 FloorNumber = 1,
-                Passengers = new List<Person>() { new Person(1, 6), new Person(1, 5), new Person(1, 2) }
+                Passengers = new List<Person>() { new Person(1, 6), new Person(1, 5), new Person(1, 0, true) }
             },
             new Floor()
             {
@@ -54,7 +54,7 @@ namespace Lift
             new Floor()
             {
                 FloorNumber = 5,
-                Passengers = new List<Person>()
+                Passengers = new List<Person> { new Person(5, 8, true) }
             },
             new Floor()
             {

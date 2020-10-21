@@ -31,7 +31,7 @@ namespace LiftTests
             var floorHistory = string.Join("-", lift.GetFloorHistory());
 
             // Assert
-            Assert.IsTrue(floorHistory == "1-2-4-5-6-0-10-9-4-3-2-1-7-6-5-4-3-9-10-2-0");
+            Assert.IsTrue(floorHistory == "1-0-5-6-7-8-7-6-5-4-3-2-4-0-10-9-4-3-2-1-9-10-2-0");
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace LiftTests
             var floorHistory = string.Join("-", lift.GetFloorHistory());
 
             // Assert
-            Assert.IsTrue(floorHistory != "1-2-4-5-6-0-10-9-4-3-2-1-7-6-5-4-3-9-10-2");
+            Assert.IsTrue(floorHistory != "1-0-5-6-7-8-7-6-5-4-3-2-4-0-10-9-4-3-2-1-9-10-2");
         }
 
         /// <summary>
@@ -79,6 +79,29 @@ namespace LiftTests
         }
 
         /// <summary>
+        /// Checks whether mechanics overrode the direction the lift was moving in. Should be true.
+        /// </summary>
+        [TestMethod]
+        public void Mechanics_OverrodeDiraction_True()
+        {
+            // Arrange
+            var floorList = GetFloors();
+            LiftConfig liftConfig = new LiftConfig();
+            liftConfig.MaxFloors = 11;
+            liftConfig.Floors = GetFloors();
+            liftConfig.Capacity = 5;
+            Lift.Lift lift = new Lift.Lift(liftConfig);
+
+            // Act
+            lift.Move(0);
+
+            // Assert
+            var history = lift.GetFloorHistory();
+            Assert.IsTrue(history[0] > history[1]);
+            Assert.IsTrue(history[1] == 0);
+        }
+
+        /// <summary>
         /// Gets a list of floors as an input to the test.
         /// </summary>
         /// <returns>A list of floors.</returns>
@@ -91,7 +114,7 @@ namespace LiftTests
             },
             new Floor(){
                 FloorNumber = 1,
-                Passengers = new List<Person>() { new Person(1, 6), new Person(1, 5), new Person(1, 2) }
+                Passengers = new List<Person>() { new Person(1, 6), new Person(1, 5), new Person(1, 0, true) }
             },
             new Floor()
             {
@@ -111,7 +134,7 @@ namespace LiftTests
             new Floor()
             {
                 FloorNumber = 5,
-                Passengers = new List<Person>()
+                Passengers = new List<Person> { new Person(5, 8, true) }
             },
             new Floor()
             {

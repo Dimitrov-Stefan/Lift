@@ -35,5 +35,14 @@ namespace Lift
         {
             return Passengers.Count == 0;
         }
+
+        /// <summary>
+        /// Checks whether the floor has waiting passengers on it.
+        /// </summary>
+        /// <returns>True if there are waiting mechanics on the floor, otherwise false.</returns>
+        public bool HasWaitingMechanics()
+        {
+            return Passengers.Any(p => p.IsMechanic && p.CurrentFloor != p.Destination);
+        }
     }
 }

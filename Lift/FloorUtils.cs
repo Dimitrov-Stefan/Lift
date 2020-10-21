@@ -45,6 +45,32 @@ namespace Lift
         }
 
         /// <summary>
+        /// Gets the lowest floor that has waiting mechanics.
+        /// </summary>
+        /// <param name="floors">A list of floors to check.</param>
+        /// <returns>The lowest floor that has waiting mechanics.</returns>
+        public static int GetMinFloorWaitingMechanic(this List<Floor> floors)
+        {
+            return floors.SelectMany(f => f.Passengers)
+                .Where(p => p.CurrentFloor != p.Destination && p.IsMechanic)
+                .Select(p => p.CurrentFloor)
+                .Min();
+        }
+
+        /// <summary>
+        /// Gets the highest floor that has waiting mechanics.
+        /// </summary>
+        /// <param name="floors">A list of floors to check.</param>
+        /// <returns>The highest floor that has waiting mechanics.</returns>
+        public static int GetMaxFloorWaitingMechanic(this List<Floor> floors)
+        {
+            return floors.SelectMany(f => f.Passengers)
+                .Where(p => p.CurrentFloor != p.Destination && p.IsMechanic)
+                .Select(p => p.CurrentFloor)
+                .Max();
+        }
+
+        /// <summary>
         /// Adds a floor to a list without duplication.
         /// </summary>
         /// <param name="floors">The floor list.</param>
